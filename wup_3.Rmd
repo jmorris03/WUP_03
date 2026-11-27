@@ -1,7 +1,7 @@
 ---
 title: "Alcohol vs Seat choice"
-author: "Your Name"
-date: "Fall 2020"
+author: "Jacqueline Morris"
+date: "Fall 2026"
 output: html_document
 ---
 
@@ -15,7 +15,16 @@ require(tigerstats)
 davisdata <- read.csv(file="UCDavis.csv")
 ```
 ## Our Goal is to answer this question Is there a difference between the alcohol consumed between the row
-## you choose to sit in??
+
+Is there a relationship between the row someone chooses to sit in and the amount of alcohol they consume? 
+
+$H_0$ There is no relationship between the row someone chooses to sit in and the amount of alcohol consumed.    
+$H_A$ There is a relationship between the row someone chooses to sit in and the amount of alcohol consumed.    
+
+## Methods
+
+Seat is categorical.   
+Alcohol consumption is numerical.    
 
 ## Now with ggplot - first select the basic data
 
@@ -35,10 +44,33 @@ basicCN + geom_boxplot()
 basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='errorbar') + labs(title="Fancy notch boxplot \n with 2 lines")
 ```
 
+
+This box plot graph shows that there is a significant difference in the alcohol consumption between the seat rows back, front, and middle. The students in the back row consumed significantly more alcohol than the middle and front rows. The middle row consumed a bit more than the front row. The front row consumed the least amount of alcohol.     
+
 ## Numerical Summarys 
+```{r}
+favstats(alcohol~Seat,data=davisdata) 
+```
+
+There is a difference in the amount of alcohol consumed in ounces between the front, middle, and back rows. The back row had a mean of 9.6 ounces consumed while the middle row had a mean of 3.3 ounces consumed and the front row had the lowest mean of 1.8 ounces consumed. There appears to be a wider margin between the rows concerning the amount of alcohol the students consume in ounces. 
+
 
 ## Inferential Tests
 
+```{r}
+model1 <- aov(alcohol~Seat,data=davisdata)
+summary.aov(model1)
+```
+The p value is 0.000116, this is less than 0.05 so, we reject the null hypothesis and conclude that their is a relationship between the row that students choose to sit in and the amount of alcohol they consume.    
+```{r}
+plot(TukeyHSD(model1))
+```
+This plot shows there is a difference in the amount of alcohol a student consumes based off of the row they choose to sit in as in the front, middle, or back row.   
+
 ## Conclusions
+
+Is there a relationship between the row someone sits in and the amount of alcohol they consume?
+
+Based on the box plot, model1, and turkey plot, we found that there is a significant difference in the amount of alcohol consumed by students that sit in the front, middle, and back row. The p value as 0.000116 which is smaller than 0.5 and signified that we reject the null hypothesis. Therefore, according to the data, there is a relationship between the alcohol consumed and the row a student elects to sit in. The students who sat in the back row consumed the most alcohol. The students iin the middle row consumed less than the students in the back but a bit more than the students in the front row. The students in the front row consumed the least amount of alcohol. The front and middle row were closer in range in the amount of alcohol consumed compared to the back row which drank significantly more.    
 
 
